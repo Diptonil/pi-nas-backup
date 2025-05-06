@@ -10,6 +10,7 @@ import sys
 import tarfile
 
 import cloudinary
+import cloudinary.uploader
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
@@ -84,7 +85,7 @@ class BackupGenerator:
             logger.error("Summary file improperly configured.")
             sys.exit()
 
-    def get_location_data(self) -> list:
+    def get_location_data(self) -> list[str]:
         """Returns the contents of the entire file (the locations of taking backups)."""
         with open(LOCATION_SPECIFIER_FILENAME, "r") as file:
             data = [line.strip() for line in file]
@@ -92,7 +93,6 @@ class BackupGenerator:
 
     def create_gzip_files(self) -> None:
         """Applies GZIP compression on TAR balls (or regular files)."""
-        # fix this!
         for location in self.location_data:
             path = os.path.abspath(location)
             try:
@@ -102,9 +102,8 @@ class BackupGenerator:
                 else:
                     with tarfile.open(location + ".tgz", "w:gz") as tar:
                         tar.add(location)
-            except Exception as e:
+            except Exception:
                 print("ERROR: GZIP operation failed on file:", location)
-                print(e)
                 logger.error(f"GZIP operation failed on location: {location}.")
                 sys.exit()
         logger.info("Step 1 (Compression): Complete!")
@@ -119,7 +118,7 @@ class BackupGenerator:
                 print("ERROR: Deletion failed for tarball of file:", location)
                 logger.error(f"Archive deletion failed on location: {location}.")
                 sys.exit()
-        logger.info("Step 4 (Backup): Complete!" if self.is_encrypted else "Step 3 (Backup): Complete!")
+        logger.info("Step 4 (Archive Removal): Complete!" if self.is_encrypted else "Step 3 (Archive Removal): Complete!")
         
     
     def encrypt(self) -> None:
@@ -152,39 +151,36 @@ class BackupGenerator:
         try:
             for location in self.location_data:
                 original_size = get_size_gb(location)
+                backup_folder_name = location.split('/')[0:-1]
                 if self.is_encrypted:
                     backup_filename = location + ".gz.enc" if os.path.isfile(location) else location + '.tgz.enc'
                     backup_size = get_size_gb(backup_filename)
-                    cloudinary.uploader.upload_large(backup_filename)
+                    response = cloudinary.uploader.upload_large(backup_filename, use_filename=True, overwrite=True)
                 else:
                     backup_filename = location + ".gz" if os.path.isfile(location) else location + '.tgz'
                     backup_size = get_size_gb(backup_filename)
-                    cloudinary.uploader.upload_large(backup_filename)
-                logger.info(f"Backed up '{location}' to Cloud. Original size: {original_size} GB. Backed-up size: {backup_size} GB.")
-        except Exception:
+                    response = cloudinary.uploader.upload_large(backup_filename, use_filename=True, overwrite=True)
+                logger.info(f"Backed up '{location}' to Cloud with filename as '{response['public_id']}'. Original size: {original_size}. Backed-up size: {backup_size}.")
+        except Exception as e:
             print("ERROR: Backup failed.")
+            print(e)
             sys.exit()
         logger.info("Step 3 (Backup): Complete!" if self.is_encrypted else "Step 2 (Backup): Complete!")
         
     def generate_summary(self) -> None:
         """Populates the summary file by altering or appending entries."""
         summary_data = {}
+        size_gb = 0
         with open(SUMMARY_FILENAME, 'r', newline='', encoding='utf-8') as csvfile:
             reader = csv.reader(csvfile)
-            header = next(reader, None)
-            if header == ['location', 'size', 'timestamp']:
-                for row in reader:
-                    location, size_gb_str, timestamp_str = row
-                    try:
-                        size_gb = float(size_gb_str)
-                        timestamp = datetime.fromisoformat(timestamp_str)
-                        summary_data[location] = {'size': size_gb, 'timestamp': timestamp}
-                    except ValueError:
-                        print(f"Warning: Skipping invalid entry in summary.csv: {row}")
-                        sys.exit()
-            else:
-                print("Warning: summary.csv header is missing or incorrect. Starting with an empty tracker.")
-                sys.exit()
+            for row in reader:
+                location, size_gb_str, timestamp_str = row
+                try:
+                    size_gb = float(size_gb_str)
+                    timestamp = datetime.fromisoformat(timestamp_str)
+                    summary_data[location] = {'size': size_gb, 'timestamp': timestamp}
+                except ValueError:
+                    continue
         updated_summary_data = summary_data.copy()
         for location in self.location_data:
             try:
@@ -218,8 +214,8 @@ class BackupGenerator:
         if self.is_encrypted:
             self.encrypt()
         self.backup()
-        self.generate_summary()
         self.remove_gzip_files()
+        self.generate_summary()
         logger.info("Backup successfully complete!")
         print("SUCCESS: Backup Complete!")
         

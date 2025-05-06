@@ -9,7 +9,6 @@ import subprocess
 import sys
 import tarfile
 
-import cloudinary.uploader
 import cloudinary
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
@@ -17,9 +16,9 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
 
 
-LOCATION_SPECIFIER_FILENAME = "locations.txt"
-SUMMARY_FILENAME = "summary.csv"
-LOG_FILENAME = datetime.now().strftime("%Y%m%d") + ".log"
+LOCATION_SPECIFIER_FILENAME = "reports/locations.txt"
+SUMMARY_FILENAME = "reports/summary.csv"
+LOG_FILENAME = datetime.now().strftime("%Y-%m-%d") + ".log"
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -67,11 +66,11 @@ class Credentials:
 class BackupGenerator:
     """To create backups."""
 
-    def __init__(self, credentials: dict, is_encrypted: bool = False) -> None:
-        self.credentials = credentials
+    def __init__(self, is_encrypted: bool = False) -> None:
         self.is_encrypted = is_encrypted
         self.file_validity_check()
-        self.location_data = self.location_data
+        self.location_data = self.get_location_data()
+        logger.info("Initiating Bat Backup v1.0.0.")
         logger.info("Starting the 4-step process now." if is_encrypted else "Starting the 3-step process now.")
 
     def file_validity_check(self) -> None:
@@ -93,16 +92,19 @@ class BackupGenerator:
 
     def create_gzip_files(self) -> None:
         """Applies GZIP compression on TAR balls (or regular files)."""
+        # fix this!
         for location in self.location_data:
+            path = os.path.abspath(location)
             try:
-                if os.path.isfile(location):
-                    with open(location, 'rb') as input_file, gzip.open(location + '.gz', 'wb') as output_file:
+                if os.path.isfile(path):
+                    with open(path, 'rb') as input_file, gzip.open(path + '.gz', 'wb') as output_file:
                         shutil.copyfileobj(input_file, output_file)
                 else:
                     with tarfile.open(location + ".tgz", "w:gz") as tar:
                         tar.add(location)
-            except Exception:
+            except Exception as e:
                 print("ERROR: GZIP operation failed on file:", location)
+                print(e)
                 logger.error(f"GZIP operation failed on location: {location}.")
                 sys.exit()
         logger.info("Step 1 (Compression): Complete!")
@@ -191,7 +193,7 @@ class BackupGenerator:
                     updated_summary_data[location]['timestamp'] = datetime.now()
                     print(f"Updated backup status for: {location} (Size: {size_gb} GB, Timestamp: {timestamp.isoformat()})")
                 else:
-                    updated_summary_data[location] = {'_gb_gb': size_gb, 'timestamp': timestamp}
+                    updated_summary_data[location] = {'size': size_gb, 'timestamp': timestamp}
                     print(f"Added backup status for: {location} (Size: {size_gb} GB, Timestamp: {timestamp.isoformat()})")
             except FileNotFoundError:
                 print(f"Warning: Location not found: {location}. Cannot update backup status.")
@@ -202,9 +204,9 @@ class BackupGenerator:
         try:
             with open(SUMMARY_FILENAME, 'w', newline='', encoding='utf-8') as csvfile:
                 writer = csv.writer(csvfile)
-                writer.writerow(['location', 'size_gb', 'timestamp'])
+                writer.writerow(['location', 'size', 'timestamp'])
                 for location, data in updated_summary_data.items():
-                    writer.writerow([location, data['size_gb'], data['timestamp'].isoformat()])
+                    writer.writerow([location, data['size'], data['timestamp'].isoformat()])
         except Exception as e:
             print(f"Error saving summary.csv: {e}")
             sys.exit()

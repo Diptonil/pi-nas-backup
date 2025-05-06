@@ -1,5 +1,4 @@
-from argparse import ArgumentParser, FileType
-import sys
+from argparse import ArgumentParser
 
 
 class Parser:
@@ -15,16 +14,10 @@ class Parser:
     
     def add_parser_arguments(self) -> None:
         """Adds all required arguments to the parser."""
-        positional_arguments_group = self.parser.add_argument_group("POSITIONAL ARGUMENTS")
-        positional_arguments_group.add_argument("file", nargs="?", type=FileType("r"), default=sys.stdin, help="The file path from where locations or folders to recurively back up are selected.")
         options_group = self.parser.add_mutually_exclusive_group()
         options_group.add_argument("-h", "--help", action="help", help="To show this help message.")
-        options_group.add_argument("-r", "--retrieve", action="store_true", help="To fetch backups from offsite.")
-        options_group.add_argument("-r", "--encrypt", action="store_true", help="To encrypt data during backups.")
-
-    def get_file_name(self) -> str:
-        """Returns the source file name."""
-        return self.args["file"].name
+        options_group.add_argument("-r", "--retrieve", action="store_true", help="To fetch backups from offsite.", default=False)
+        options_group.add_argument("-e", "--encrypt", action="store_true", help="To encrypt data during backups.", default=False)
 
     def needs_retrieval(self) -> bool:
         """Returns if -r flag is passed."""

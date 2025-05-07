@@ -2,10 +2,8 @@ import base64
 import csv
 from datetime import datetime
 import os
-import logging
 import gzip
 import shutil
-import subprocess
 import sys
 import tarfile
 
@@ -16,53 +14,11 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
 
+from utils.misc import get_size_gb, logger, Credentials
+
 
 LOCATION_SPECIFIER_FILENAME = "reports/locations.txt"
 SUMMARY_FILENAME = "reports/summary.csv"
-LOG_FILENAME = datetime.now().strftime("%Y-%m-%d") + ".log"
-
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-log_formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s')
-log_handler = logging.FileHandler(f'logs/{LOG_FILENAME}')
-log_handler.setLevel(logging.INFO)
-log_handler.setFormatter(log_formatter)
-logger.addHandler(log_handler)
-
-
-def get_size_gb(path: str) -> str:
-    return subprocess.check_output(['du','-sh', path]).split()[0].decode('utf-8')
-        
-
-def load_env(dotenv_path=".env"):
-    """Loads environment variables from a .env file. No external dependencies."""
-    with open(dotenv_path, "r") as f:
-        for line in f:
-            line = line.strip()
-            if line and not line.startswith("#") and "=" in line:
-                key, value = line.split("=", 1)
-                os.environ[key] = value
-
-
-class Credentials:
-    """Stores credentials derived from environment variables."""
-
-    def __init__(self) -> None:
-        try:
-            load_env()
-            self.cloud_name = os.getenv("CLOUD_NAME")
-            self.api_key = os.getenv("API_KEY")
-            self.api_secret = os.getenv("API_SECRET")
-            self.password = os.getenv("PASSWORD")
-            self.validate_existence()
-        except Exception:
-            print("ERROR: Failed to access environment variables.")
-            logger.error("Failed to access environment variables.")
-            sys.exit()
-    
-    def validate_existence(self) -> None:
-        if not self.cloud_name or not self.api_key or not self.api_secret or not self.password:
-            raise Exception
 
 
 class BackupGenerator:
@@ -74,7 +30,7 @@ class BackupGenerator:
         self.credentials = Credentials()
         self.is_encrypted = is_encrypted
         self.location_data = self.get_location_data()
-        logger.info("Initiating Bat Backup v1.0.0.")
+        logger.info("Initiating Bat Backup v1.0.0.\nBackup mode selected.")
         logger.info("Starting the 5-step process now." if is_encrypted else "Starting the 4-step process now.")
 
     def file_validity_check(self) -> None:
@@ -124,7 +80,6 @@ class BackupGenerator:
                 sys.exit()
         logger.info("Step 4 (Archive Removal): Complete!" if self.is_encrypted else "Step 3 (Archive Removal): Complete!")
         print("Step 4 (Archive Removal): Complete!" if self.is_encrypted else "Step 3 (Archive Removal): Complete!")
-        
     
     def encrypt(self) -> None:
         """Perform encryption on the collected data."""
@@ -161,11 +116,11 @@ class BackupGenerator:
                 if self.is_encrypted:
                     backup_filename = location + ".gz.enc" if os.path.isfile(location) else location + '.tgz.enc'
                     backup_size = get_size_gb(backup_filename)
-                    cloudinary.uploader.upload_large(backup_filename, public_id=backup_filename.split('/')[-1], overwrite=True)
+                    cloudinary.uploader.upload_large(backup_filename, public_id=backup_filename.split('/')[-1], overwrite=True, type="private")
                 else:
                     backup_filename = location + ".gz" if os.path.isfile(location) else location + '.tgz'
                     backup_size = get_size_gb(backup_filename)
-                    cloudinary.uploader.upload_large(backup_filename, public_id=backup_filename.split('/')[-1], overwrite=True)
+                    cloudinary.uploader.upload_large(backup_filename, public_id=backup_filename.split('/')[-1], overwrite=True, type="private")
                 self.summary.append({"location": location, "size": backup_size, "timestamp": datetime.now()})
                 logger.info(f"Backed up '{location}' to Cloud. Original size: {original_size}. Backed-up size: {backup_size}.")
         except Exception as e:
@@ -196,7 +151,7 @@ class BackupGenerator:
         logger.info("Step 5 (Summary Generation): Complete!" if self.is_encrypted else "Step 4 (Summary Generation): Complete!")
         print("Step 5 (Summary Generation): Complete!" if self.is_encrypted else "Step 4 (Summary Generation): Complete!")
         
-    def start(self) -> None:
+    def back_up(self) -> None:
         """To kick-off the entire process."""
         self.create_gzip_files()
         if self.is_encrypted:
@@ -206,7 +161,3 @@ class BackupGenerator:
         self.generate_summary()
         logger.info("Backup successfully complete!")
         print("SUCCESS: Backup Complete!")
-        
-
-class BackupRetriever:
-    """To unpack the backups."""

@@ -1,4 +1,4 @@
-
+import base64
 import csv
 from datetime import datetime
 import os
@@ -53,6 +53,7 @@ class Credentials:
             self.cloud_name = os.getenv("CLOUD_NAME")
             self.api_key = os.getenv("API_KEY")
             self.api_secret = os.getenv("API_SECRET")
+            self.password = os.getenv("PASSWORD")
             self.validate_existence()
         except Exception:
             print("ERROR: Failed to access environment variables.")
@@ -60,7 +61,7 @@ class Credentials:
             sys.exit()
     
     def validate_existence(self) -> None:
-        if not self.cloud_name or not self.api_key or not self.api_secret:
+        if not self.cloud_name or not self.api_key or not self.api_secret or not self.password:
             raise Exception
 
 
@@ -70,6 +71,7 @@ class BackupGenerator:
     def __init__(self, is_encrypted: bool = False) -> None:
         self.file_validity_check()
         self.summary = []
+        self.credentials = Credentials()
         self.is_encrypted = is_encrypted
         self.location_data = self.get_location_data()
         logger.info("Initiating Bat Backup v1.0.0.")
@@ -126,13 +128,13 @@ class BackupGenerator:
     
     def encrypt(self) -> None:
         """Perform encryption on the collected data."""
-        password = self.credentials["password"].encode('utf-8')
+        password = self.credentials.password.encode('utf-8')
         for location in self.location_data:
             try:
                 salt = os.urandom(16)
                 kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=salt, iterations=390000, backend=default_backend())
-                key = Fernet(kdf.derive(password))
-
+                key = Fernet(base64.urlsafe_b64encode(kdf.derive(password)))
+                location = location + '.gz' if os.path.isfile(location) else location + '.tgz'
                 with open(location, 'rb') as infile, open(location + '.enc', 'wb') as outfile:
                     outfile.write(salt)
                     while True:
@@ -141,17 +143,18 @@ class BackupGenerator:
                             break
                         encrypted_chunk = key.encrypt(chunk)
                         outfile.write(encrypted_chunk)
-            except Exception:
+            except Exception as e:
                 print("ERROR: Encryption issues on file:", location)
                 logger.error(f"Encryption failed on location: {location}.")
+                self.remove_gzip_files()
+                print(e)
                 sys.exit()
         logger.info("Step 2 (Encryption): Complete!")
         print("Step 2 (Encryption): Complete!")
 
     def backup(self) -> None:
         """Backs up to Cloudinary."""
-        credentials = Credentials()
-        cloudinary.config(cloud_name=credentials.cloud_name, api_key=credentials.api_key, api_secret=credentials.api_secret)
+        cloudinary.config(cloud_name=self.credentials.cloud_name, api_key=self.credentials.api_key, api_secret=self.credentials.api_secret)
         try:
             for location in self.location_data:
                 original_size = get_size_gb(location)

@@ -68,11 +68,12 @@ class BackupGenerator:
     """To create backups."""
 
     def __init__(self, is_encrypted: bool = False) -> None:
-        self.is_encrypted = is_encrypted
         self.file_validity_check()
+        self.summary = []
+        self.is_encrypted = is_encrypted
         self.location_data = self.get_location_data()
         logger.info("Initiating Bat Backup v1.0.0.")
-        logger.info("Starting the 4-step process now." if is_encrypted else "Starting the 3-step process now.")
+        logger.info("Starting the 5-step process now." if is_encrypted else "Starting the 4-step process now.")
 
     def file_validity_check(self) -> None:
         """Checks if the file exists and is valid."""
@@ -107,6 +108,7 @@ class BackupGenerator:
                 logger.error(f"GZIP operation failed on location: {location}.")
                 sys.exit()
         logger.info("Step 1 (Compression): Complete!")
+        print("Step 1 (Compression): Complete!")
         
 
     def remove_gzip_files(self) -> None:
@@ -119,6 +121,7 @@ class BackupGenerator:
                 logger.error(f"Archive deletion failed on location: {location}.")
                 sys.exit()
         logger.info("Step 4 (Archive Removal): Complete!" if self.is_encrypted else "Step 3 (Archive Removal): Complete!")
+        print("Step 4 (Archive Removal): Complete!" if self.is_encrypted else "Step 3 (Archive Removal): Complete!")
         
     
     def encrypt(self) -> None:
@@ -143,6 +146,7 @@ class BackupGenerator:
                 logger.error(f"Encryption failed on location: {location}.")
                 sys.exit()
         logger.info("Step 2 (Encryption): Complete!")
+        print("Step 2 (Encryption): Complete!")
 
     def backup(self) -> None:
         """Backs up to Cloudinary."""
@@ -151,62 +155,43 @@ class BackupGenerator:
         try:
             for location in self.location_data:
                 original_size = get_size_gb(location)
-                backup_folder_name = location.split('/')[0:-1]
                 if self.is_encrypted:
                     backup_filename = location + ".gz.enc" if os.path.isfile(location) else location + '.tgz.enc'
                     backup_size = get_size_gb(backup_filename)
-                    response = cloudinary.uploader.upload_large(backup_filename, use_filename=True, overwrite=True)
+                    cloudinary.uploader.upload_large(backup_filename, public_id=backup_filename.split('/')[-1], overwrite=True)
                 else:
                     backup_filename = location + ".gz" if os.path.isfile(location) else location + '.tgz'
                     backup_size = get_size_gb(backup_filename)
-                    response = cloudinary.uploader.upload_large(backup_filename, use_filename=True, overwrite=True)
-                logger.info(f"Backed up '{location}' to Cloud with filename as '{response['public_id']}'. Original size: {original_size}. Backed-up size: {backup_size}.")
+                    cloudinary.uploader.upload_large(backup_filename, public_id=backup_filename.split('/')[-1], overwrite=True)
+                self.summary.append({"location": location, "size": backup_size, "timestamp": datetime.now()})
+                logger.info(f"Backed up '{location}' to Cloud. Original size: {original_size}. Backed-up size: {backup_size}.")
         except Exception as e:
-            print("ERROR: Backup failed.")
-            print(e)
+            print("ERROR: Backup failed.", e)
+            self.remove_gzip_files()
             sys.exit()
         logger.info("Step 3 (Backup): Complete!" if self.is_encrypted else "Step 2 (Backup): Complete!")
+        print("Step 3 (Backup): Complete!" if self.is_encrypted else "Step 2 (Backup): Complete!")
         
     def generate_summary(self) -> None:
         """Populates the summary file by altering or appending entries."""
-        summary_data = {}
-        size_gb = 0
-        with open(SUMMARY_FILENAME, 'r', newline='', encoding='utf-8') as csvfile:
-            reader = csv.reader(csvfile)
-            for row in reader:
-                location, size_gb_str, timestamp_str = row
-                try:
-                    size_gb = float(size_gb_str)
-                    timestamp = datetime.fromisoformat(timestamp_str)
-                    summary_data[location] = {'size': size_gb, 'timestamp': timestamp}
-                except ValueError:
-                    continue
-        updated_summary_data = summary_data.copy()
-        for location in self.location_data:
-            try:
-                if location in updated_summary_data:
-                    updated_summary_data[location]['size'] = get_size_gb(location)
-                    updated_summary_data[location]['timestamp'] = datetime.now()
-                    print(f"Updated backup status for: {location} (Size: {size_gb} GB, Timestamp: {timestamp.isoformat()})")
-                else:
-                    updated_summary_data[location] = {'size': size_gb, 'timestamp': timestamp}
-                    print(f"Added backup status for: {location} (Size: {size_gb} GB, Timestamp: {timestamp.isoformat()})")
-            except FileNotFoundError:
-                print(f"Warning: Location not found: {location}. Cannot update backup status.")
-                sys.exit()
-            except Exception as e:
-                print(f"Error processing location {location}: {e}")
-                sys.exit()
+        updated_summary = []
         try:
+            with open(SUMMARY_FILENAME, 'r', newline='', encoding='utf-8') as csvfile:
+                for row in csv.DictReader(csvfile):
+                    if row["location"] not in self.location_data:
+                        updated_summary.append(row)
             with open(SUMMARY_FILENAME, 'w', newline='', encoding='utf-8') as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerow(['location', 'size', 'timestamp'])
-                for location, data in updated_summary_data.items():
-                    writer.writerow([location, data['size'], data['timestamp'].isoformat()])
+                writer = csv.DictWriter(csvfile, fieldnames=["location", "size", "timestamp"])
+                writer.writeheader()
+                writer.writerows(updated_summary)
+            with open(SUMMARY_FILENAME, 'a', newline='', encoding='utf-8') as csvfile:
+                writer = csv.DictWriter(csvfile, fieldnames=["location", "size", "timestamp"])
+                writer.writerows(self.summary)
         except Exception as e:
             print(f"Error saving summary.csv: {e}")
             sys.exit()
-        logger.info("Step 5 (Backup): Complete!" if self.is_encrypted else "Step 4 (Backup): Complete!")
+        logger.info("Step 5 (Summary Generation): Complete!" if self.is_encrypted else "Step 4 (Summary Generation): Complete!")
+        print("Step 5 (Summary Generation): Complete!" if self.is_encrypted else "Step 4 (Summary Generation): Complete!")
         
     def start(self) -> None:
         """To kick-off the entire process."""

@@ -7,7 +7,7 @@ import os
 
 LOG_FILENAME = datetime.now().strftime("%Y-%m-%d") + ".log"
 
-logger = logging.getLogger()
+logger = logging.getLogger("Application")
 logger.setLevel(logging.INFO)
 log_formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s')
 log_handler = logging.FileHandler(f'logs/{LOG_FILENAME}')

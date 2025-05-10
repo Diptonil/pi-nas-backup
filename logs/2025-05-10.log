@@ -1,12 +1,13 @@
-2025-05-10 13:55:19,810 | INFO | Initiating Bat Backup v1.0.0.
-2025-05-10 13:55:19,810 | INFO | Starting the 5-step process now.
-2025-05-10 13:55:21,433 | INFO | Step 1 (Compression): Complete!
-2025-05-10 13:55:26,000 | INFO | Step 2 (Encryption): Complete!
-2025-05-10 13:55:28,407 | INFO | Backed up '/home/bruce/Videos/Screencasts/hi.log' to Cloud. Original size: 0. Backed-up size: 4.0K.
-2025-05-10 13:55:32,093 | INFO | Backed up '/home/bruce/Videos/Screencasts/Screencast from 22-10-24 12:28:17 PM IST.webm' to Cloud. Original size: 656K. Backed-up size: 828K.
-2025-05-10 13:55:34,535 | INFO | Backed up '/home/bruce/Videos/Screencasts/Screencast from 22-10-24 12:52:35 PM IST.webm' to Cloud. Original size: 484K. Backed-up size: 612K.
-2025-05-10 13:55:40,604 | INFO | Backed up '/home/bruce/Videos/Screencasts' to Cloud. Original size: 3.6M. Backed-up size: 4.3M.
-2025-05-10 13:55:40,604 | INFO | Step 3 (Backup): Complete!
-2025-05-10 13:55:40,609 | INFO | Step 4 (Archive Removal): Complete!
-2025-05-10 13:55:40,679 | INFO | Step 5 (Summary Generation): Complete!
-2025-05-10 13:55:40,679 | INFO | Backup successfully complete!
+2025-05-10 20:16:44,521 | INFO | Initiating Bat Backup v1.0.0.
+2025-05-10 20:16:44,521 | INFO | Backup mode selected.
+2025-05-10 20:16:44,521 | INFO | Starting the 5-step process now.
+2025-05-10 20:16:45,725 | INFO | Step 1 (Compression): Complete!
+2025-05-10 20:16:49,717 | INFO | Step 2 (Encryption): Complete!
+2025-05-10 20:16:51,600 | INFO | Backed up '/home/bruce/Videos/Screencasts/hi.log' to Cloud. Original size: 0. Backed-up size: 4.0K.
+2025-05-10 20:16:55,036 | INFO | Backed up '/home/bruce/Videos/Screencasts/Screencast from 22-10-24 12:28:17 PM IST.webm' to Cloud. Original size: 656K. Backed-up size: 828K.
+2025-05-10 20:16:57,595 | INFO | Backed up '/home/bruce/Videos/Screencasts/Screencast from 22-10-24 12:52:35 PM IST.webm' to Cloud. Original size: 484K. Backed-up size: 612K.
+2025-05-10 20:17:03,740 | INFO | Backed up '/home/bruce/Videos/Screencasts' to Cloud. Original size: 3.6M. Backed-up size: 4.3M.
+2025-05-10 20:17:03,740 | INFO | Step 3 (Backup): Complete!
+2025-05-10 20:17:03,745 | INFO | Step 4 (Archive Removal): Complete!
+2025-05-10 20:17:03,747 | INFO | Step 5 (Summary Generation): Complete!
+2025-05-10 20:17:03,747 | INFO | Backup successfully complete!

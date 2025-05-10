@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 
 
 class Parser:
-    """Custom CLI parser."""
+    """To parser CLI inputs particular to this application."""
 
     def __init__(self) -> None:
         self.parser = ArgumentParser(prog="BatBackup v1.0", description="Backup utility to sync local storage to Cloudinary with compression & encryption.", add_help=False)

@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 import base64
 import csv
 from datetime import datetime
@@ -21,8 +22,8 @@ LOCATION_SPECIFIER_FILENAME = "reports/locations.txt"
 SUMMARY_FILENAME = "reports/summary.csv"
 
 
-class BackupGenerator:
-    """To create backups."""
+class BackupGenerator(ABC):
+    """Abstract class to provide a usual template to create backups."""
 
     def __init__(self, is_encrypted: bool = False) -> None:
         self.file_validity_check()
@@ -30,7 +31,8 @@ class BackupGenerator:
         self.credentials = Credentials()
         self.is_encrypted = is_encrypted
         self.location_data = self.get_location_data()
-        logger.info("Initiating Bat Backup v1.0.0.\nBackup mode selected.")
+        logger.info("Initiating Bat Backup v1.0.0.")
+        logger.info("Backup mode selected.")
         logger.info("Starting the 5-step process now." if is_encrypted else "Starting the 4-step process now.")
 
     def file_validity_check(self) -> None:
@@ -107,28 +109,9 @@ class BackupGenerator:
         logger.info("Step 2 (Encryption): Complete!")
         print("Step 2 (Encryption): Complete!")
 
+    @abstractmethod
     def backup(self) -> None:
-        """Backs up to Cloudinary."""
-        cloudinary.config(cloud_name=self.credentials.cloud_name, api_key=self.credentials.api_key, api_secret=self.credentials.api_secret)
-        try:
-            for location in self.location_data:
-                original_size = get_size_gb(location)
-                if self.is_encrypted:
-                    backup_filename = location + ".gz.enc" if os.path.isfile(location) else location + '.tgz.enc'
-                    backup_size = get_size_gb(backup_filename)
-                    cloudinary.uploader.upload_large(backup_filename, public_id=backup_filename.split('/')[-1], overwrite=True, type="private")
-                else:
-                    backup_filename = location + ".gz" if os.path.isfile(location) else location + '.tgz'
-                    backup_size = get_size_gb(backup_filename)
-                    cloudinary.uploader.upload_large(backup_filename, public_id=backup_filename.split('/')[-1], overwrite=True, type="private")
-                self.summary.append({"location": location, "size": backup_size, "timestamp": datetime.now()})
-                logger.info(f"Backed up '{location}' to Cloud. Original size: {original_size}. Backed-up size: {backup_size}.")
-        except Exception as e:
-            print("ERROR: Backup failed.", e)
-            self.remove_gzip_files()
-            sys.exit()
-        logger.info("Step 3 (Backup): Complete!" if self.is_encrypted else "Step 2 (Backup): Complete!")
-        print("Step 3 (Backup): Complete!" if self.is_encrypted else "Step 2 (Backup): Complete!")
+        """Backs up logic that would vary based on the vendors used."""
         
     def generate_summary(self) -> None:
         """Populates the summary file by altering or appending entries."""
@@ -161,3 +144,33 @@ class BackupGenerator:
         self.generate_summary()
         logger.info("Backup successfully complete!")
         print("SUCCESS: Backup Complete!")
+
+
+class CloudinaryBackupGenerator(BackupGenerator):
+    """To create Cloudinary backups."""
+
+    def __init__(self, is_encrypted: bool = False):
+        super().__init__(is_encrypted)
+
+    def backup(self) -> None:
+        """Backs up to Cloudinary."""
+        cloudinary.config(cloud_name=self.credentials.cloud_name, api_key=self.credentials.api_key, api_secret=self.credentials.api_secret)
+        try:
+            for location in self.location_data:
+                original_size = get_size_gb(location)
+                if self.is_encrypted:
+                    backup_filename = location + ".gz.enc" if os.path.isfile(location) else location + '.tgz.enc'
+                    backup_size = get_size_gb(backup_filename)
+                    cloudinary.uploader.upload_large(backup_filename, public_id=backup_filename.split('/')[-1], overwrite=True, type="private")
+                else:
+                    backup_filename = location + ".gz" if os.path.isfile(location) else location + '.tgz'
+                    backup_size = get_size_gb(backup_filename)
+                    cloudinary.uploader.upload_large(backup_filename, public_id=backup_filename.split('/')[-1], overwrite=True, type="private")
+                self.summary.append({"location": location, "size": backup_size, "timestamp": datetime.now()})
+                logger.info(f"Backed up '{location}' to Cloud. Original size: {original_size}. Backed-up size: {backup_size}.")
+        except Exception as e:
+            print("ERROR: Backup failed.", e)
+            self.remove_gzip_files()
+            sys.exit()
+        logger.info("Step 3 (Backup): Complete!" if self.is_encrypted else "Step 2 (Backup): Complete!")
+        print("Step 3 (Backup): Complete!" if self.is_encrypted else "Step 2 (Backup): Complete!")

@@ -8,8 +8,9 @@ class BackupRetriever:
         self.summary = []
         self.credentials = Credentials()
         self.location_data = self.get_location_data()
-        logger.info("Initiating Bat Backup v1.0.0.\nRetrieval mode selected.")
-        logger.info("Starting the 5-step process now.")
+        logger.info("Initiating Bat Backup v1.0.0.")
+        logger.info("Retrieval mode selected.")
+        logger.info("Starting the 3-step process now.")
 
     def download(self) -> None:
         """Fetches files from Cloudinary."""

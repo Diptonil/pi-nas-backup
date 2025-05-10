@@ -26,9 +26,12 @@ That said, this script can be scheduled with the use of a cron job on a Pi with 
 
 Given the highly specific requirements of the project, here is how backups are implemented:
 - A `location.txt` file is read from. It contains a list of locations that would need to be backed up, along with the category the data belongs to. This is changed everytime a manual backup is initiated.
-- The `record.txt` file is read from. It is a log of all directories backed up over time, along with the timestamp of the backup and original size. If any location found in `record.txt` is repeated in `location.txt`, the cloud object is deleted.
+- The `summary.csv` file is read from. It is a log of all directories backed up over time, along with the timestamp of the backup and original size. If any location found in `summary.csv` is repeated in `location.txt`, the cloud object is deleted (basically, if a cloud backup of a resource already exists that needs to be backed up again, the latest version would backed up and the previous data would get overwritten).
 - The data to back up is collected, GZIPped and encrypted (if -e flag is present).
 - The data is sent over to the Cloud.
-- The `record.txt` is appended to. If anything is re-written, the new entry comes up now.
+- The `summary.csv` is appended to. If anything is re-written, the new entry comes up now.
 
-The code to fetch the files from Cloudinary is just an inverse operation of the logic above.
+
+## Future Modifications
+
+The reason for using Cloudinary is the fact that their services are free up to 25GB, which is huge. If there is need for higher storage (which may arise someday), more backup classes would be written to support the requirement for paid storage vendors. But that's an enhancement for some other time.

@@ -1,5 +1,5 @@
 from utils.backup_generator import CloudinaryBackupGenerator
-from utils.backup_unpacker import BackupRetriever
+from utils.backup_unpacker import CloudinaryBackupRetriever
 from utils.parser import Parser
 
 
@@ -8,7 +8,7 @@ def main() -> None:
     is_encryption_required = parser.needs_encryption()
     is_for_retrieval = parser.needs_retrieval() 
     if is_for_retrieval:
-        backup_retriever = BackupRetriever()
+        backup_retriever = CloudinaryBackupRetriever()
         backup_retriever.retrieve()
     else:
         backup_generator = CloudinaryBackupGenerator(is_encrypted=is_encryption_required)

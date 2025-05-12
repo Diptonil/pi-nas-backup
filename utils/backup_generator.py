@@ -7,6 +7,7 @@ import gzip
 import shutil
 import sys
 import tarfile
+import struct
 
 import cloudinary
 import cloudinary.uploader
@@ -98,6 +99,7 @@ class BackupGenerator(ABC):
                         if not chunk:
                             break
                         encrypted_chunk = key.encrypt(chunk)
+                        outfile.write(struct.pack('>I', len(encrypted_chunk)))
                         outfile.write(encrypted_chunk)
             except Exception as e:
                 print("ERROR: Encryption issues on file:", location)
@@ -110,7 +112,7 @@ class BackupGenerator(ABC):
 
     @abstractmethod
     def backup(self) -> None:
-        """Backs up logic that would vary based on the vendors used."""
+        """Back up logic that would vary based on the vendors used."""
         
     def generate_summary(self) -> None:
         """Populates the summary file by altering or appending entries."""

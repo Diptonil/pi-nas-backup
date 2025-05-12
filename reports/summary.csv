@@ -1,5 +1,5 @@
-location,size,timestamp
-/home/bruce/Videos/Screencasts/hi.log,4.0K,2025-05-10 20:16:51.600652
-/home/bruce/Videos/Screencasts/Screencast from 22-10-24 12:28:17 PM IST.webm,828K,2025-05-10 20:16:55.036586
-/home/bruce/Videos/Screencasts/Screencast from 22-10-24 12:52:35 PM IST.webm,612K,2025-05-10 20:16:57.595723
-/home/bruce/Videos/Screencasts,4.3M,2025-05-10 20:17:03.740009
+location,size,timestamp,public_id
+/home/bruce/Videos/Screencasts/hi.log,4.0K,2025-05-12 18:49:59.880999,hi.log.gz.enc
+/home/bruce/Videos/Screencasts/Screencast from 22-10-24 12:28:17 PM IST.webm,828K,2025-05-12 18:50:05.666746,Screencast from 22-10-24 12:28:17 PM IST.webm.gz.enc
+/home/bruce/Videos/Screencasts/Screencast from 22-10-24 12:52:35 PM IST.webm,612K,2025-05-12 18:50:07.919503,Screencast from 22-10-24 12:52:35 PM IST.webm.gz.enc
+/home/bruce/Videos/Screencasts,4.3M,2025-05-12 18:50:13.039398,Screencasts.tgz.enc

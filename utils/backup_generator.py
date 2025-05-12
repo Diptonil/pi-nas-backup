@@ -69,7 +69,6 @@ class BackupGenerator(ABC):
                 sys.exit()
         logger.info("Step 1 (Compression): Complete!")
         print("Step 1 (Compression): Complete!")
-        
 
     def remove_gzip_files(self) -> None:
         """Removes all generated GZIPs post cloud backup."""
@@ -122,11 +121,11 @@ class BackupGenerator(ABC):
                     if row["location"] not in self.location_data:
                         updated_summary.append(row)
             with open(SUMMARY_FILENAME, 'w', newline='', encoding='utf-8') as csvfile:
-                writer = csv.DictWriter(csvfile, fieldnames=["location", "size", "timestamp"])
+                writer = csv.DictWriter(csvfile, fieldnames=["location", "size", "timestamp", "public_id"])
                 writer.writeheader()
                 writer.writerows(updated_summary)
             with open(SUMMARY_FILENAME, 'a', newline='', encoding='utf-8') as csvfile:
-                writer = csv.DictWriter(csvfile, fieldnames=["location", "size", "timestamp"])
+                writer = csv.DictWriter(csvfile, fieldnames=["location", "size", "timestamp", "public_id"])
                 writer.writerows(self.summary)
         except Exception as e:
             print(f"Error saving summary.csv: {e}")
@@ -160,13 +159,11 @@ class CloudinaryBackupGenerator(BackupGenerator):
                 original_size = get_size_gb(location)
                 if self.is_encrypted:
                     backup_filename = location + ".gz.enc" if os.path.isfile(location) else location + '.tgz.enc'
-                    backup_size = get_size_gb(backup_filename)
-                    cloudinary.uploader.upload_large(backup_filename, public_id=backup_filename.split('/')[-1], overwrite=True, type="private")
                 else:
                     backup_filename = location + ".gz" if os.path.isfile(location) else location + '.tgz'
-                    backup_size = get_size_gb(backup_filename)
-                    cloudinary.uploader.upload_large(backup_filename, public_id=backup_filename.split('/')[-1], overwrite=True, type="private")
-                self.summary.append({"location": location, "size": backup_size, "timestamp": datetime.now()})
+                backup_size = get_size_gb(backup_filename)
+                response = cloudinary.uploader.upload_large(backup_filename, public_id=backup_filename.split('/')[-1], overwrite=True, type="private")
+                self.summary.append({"location": location, "size": backup_size, "timestamp": datetime.now(), "public_id": response['public_id']})
                 logger.info(f"Backed up '{location}' to Cloud. Original size: {original_size}. Backed-up size: {backup_size}.")
         except Exception as e:
             print("ERROR: Backup failed.", e)

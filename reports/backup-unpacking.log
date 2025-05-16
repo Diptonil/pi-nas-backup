@@ -1,0 +1,19 @@
+2025-05-16 13:40:07,070 | INFO | Benchmarking Bat Backup v1.0.0. The numbers below are approximate figures.
+2025-05-16 13:40:07,070 | INFO | Retrieval mode selected.
+2025-05-16 13:40:07,071 | INFO | Date & Time: 2025-05-16 13:40:07.071176
+2025-05-16 13:40:07,071 | INFO | 
+2025-05-16 13:40:07,071 | INFO | OS: Linux
+2025-05-16 13:40:07,071 | INFO | OS Version: #61~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue Apr 15 17:03:15 UTC 2
+2025-05-16 13:40:07,071 | INFO | Platform: Linux-6.8.0-59-generic-x86_64-with-glibc2.35
+2025-05-16 13:40:07,072 | INFO | Architcture: x86_64
+2025-05-16 13:40:07,072 | INFO | Processor: x86_64
+2025-05-16 13:40:07,072 | INFO | Total Memory (GB): 8.217972736
+2025-05-16 13:40:07,073 | INFO | Disk (GB): 298.650124288
+2025-05-16 13:40:07,073 | INFO | 
+2025-05-16 13:40:07,073 | INFO | Execution Time (minutes): 0.11804794867833455
+2025-05-16 13:40:07,073 | INFO | CPU (User) Time (minutes): 0.023666666666666673
+2025-05-16 13:40:07,074 | INFO | CPU (System) Time (minutes): 0.001833333333333333
+2025-05-16 13:40:07,074 | INFO | Virtual Memory (MB): 74.76953125
+2025-05-16 13:40:07,074 | INFO | Resident Set Memory (MB): 58.48046875
+2025-05-16 13:40:07,075 | INFO | I/O Read (MB): 0.0
+2025-05-16 13:40:07,075 | INFO | I/O Write (MB): 10.515625

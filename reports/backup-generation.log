@@ -1,19 +1,19 @@
-2025-05-10 20:17:03,748 | INFO | Benchmarking Bat Backup v1.0.0. The numbers below are approximate figures.
-2025-05-10 20:17:03,749 | INFO | Backup mode selected.
-2025-05-10 20:17:03,749 | INFO | Date & Time: 2025-05-10 20:17:03.749367
-2025-05-10 20:17:03,749 | INFO | 
-2025-05-10 20:17:03,749 | INFO | OS: Linux
-2025-05-10 20:17:03,750 | INFO | OS Version: #53~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Wed Jan 15 19:18:46 UTC 2
-2025-05-10 20:17:03,750 | INFO | Platform: Linux-6.8.0-52-generic-x86_64-with-glibc2.35
-2025-05-10 20:17:03,750 | INFO | Architcture: x86_64
-2025-05-10 20:17:03,750 | INFO | Processor: x86_64
-2025-05-10 20:17:03,751 | INFO | Total Memory (GB): 8.217985024
-2025-05-10 20:17:03,751 | INFO | Disk (GB): 298.650124288
-2025-05-10 20:17:03,752 | INFO | 
-2025-05-10 20:17:03,752 | INFO | Execution Time (minutes): 0.320461638768514
-2025-05-10 20:17:03,752 | INFO | CPU (User) Time (minutes): 0.08916666666666666
-2025-05-10 20:17:03,753 | INFO | CPU (System) Time (minutes): 0.0021666666666666666
-2025-05-10 20:17:03,753 | INFO | Virtual Memory (MB): 71.19140625
-2025-05-10 20:17:03,753 | INFO | Resident Set Memory (MB): 42.83984375
-2025-05-10 20:17:03,753 | INFO | I/O Read (MB): 0.0
-2025-05-10 20:17:03,754 | INFO | I/O Write (MB): 9.83984375
+2025-05-16 13:39:59,981 | INFO | Benchmarking Bat Backup v1.0.0. The numbers below are approximate figures.
+2025-05-16 13:39:59,982 | INFO | Backup mode selected (with encryption).
+2025-05-16 13:39:59,982 | INFO | Date & Time: 2025-05-16 13:39:59.982445
+2025-05-16 13:39:59,982 | INFO | 
+2025-05-16 13:39:59,982 | INFO | OS: Linux
+2025-05-16 13:39:59,983 | INFO | OS Version: #61~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue Apr 15 17:03:15 UTC 2
+2025-05-16 13:39:59,983 | INFO | Platform: Linux-6.8.0-59-generic-x86_64-with-glibc2.35
+2025-05-16 13:39:59,983 | INFO | Architcture: x86_64
+2025-05-16 13:39:59,983 | INFO | Processor: x86_64
+2025-05-16 13:39:59,984 | INFO | Total Memory (GB): 8.217972736
+2025-05-16 13:39:59,984 | INFO | Disk (GB): 298.650124288
+2025-05-16 13:39:59,984 | INFO | 
+2025-05-16 13:39:59,984 | INFO | Execution Time (minutes): 0.2712160031000773
+2025-05-16 13:39:59,984 | INFO | CPU (User) Time (minutes): 0.0405
+2025-05-16 13:39:59,985 | INFO | CPU (System) Time (minutes): 0.0018333333333333335
+2025-05-16 13:39:59,985 | INFO | Virtual Memory (MB): 73.76953125
+2025-05-16 13:39:59,985 | INFO | Resident Set Memory (MB): 43.85546875
+2025-05-16 13:39:59,985 | INFO | I/O Read (MB): 0.0
+2025-05-16 13:39:59,985 | INFO | I/O Write (MB): 7.2578125

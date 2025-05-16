@@ -16,7 +16,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
 
-from utils.misc import get_size_gb, logger, Credentials
+from utils.misc import get_size_gb, logger, generate_key_from_password, Credentials
 
 
 LOCATION_SPECIFIER_FILENAME = "reports/locations.txt"
@@ -89,18 +89,13 @@ class BackupGenerator(ABC):
         for location in self.location_data:
             try:
                 salt = os.urandom(16)
-                kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=salt, iterations=390000, backend=default_backend())
-                key = Fernet(base64.urlsafe_b64encode(kdf.derive(password)))
+                fernet = generate_key_from_password(password, salt)
                 location = location + '.gz' if os.path.isfile(location) else location + '.tgz'
-                with open(location, 'rb') as infile, open(location + '.enc', 'wb') as outfile:
-                    outfile.write(salt)
-                    while True:
-                        chunk = infile.read(4096)
-                        if not chunk:
-                            break
-                        encrypted_chunk = key.encrypt(chunk)
-                        outfile.write(struct.pack('>I', len(encrypted_chunk)))
-                        outfile.write(encrypted_chunk)
+                with open(location, 'rb') as file:
+                    original = file.read()
+                encrypted_data = fernet.encrypt(original)
+                with open(location + '.enc', 'wb') as file:
+                    file.write(salt + encrypted_data)
             except Exception as e:
                 print("ERROR: Encryption issues on file:", location)
                 logger.error(f"Encryption failed on location: {location}.")
@@ -164,7 +159,7 @@ class CloudinaryBackupGenerator(BackupGenerator):
                 else:
                     backup_filename = location + ".gz" if os.path.isfile(location) else location + '.tgz'
                 backup_size = get_size_gb(backup_filename)
-                response = cloudinary.uploader.upload_large(backup_filename, public_id=backup_filename.split('/')[-1], overwrite=True, type="private")
+                response = cloudinary.uploader.upload_large(backup_filename, public_id=backup_filename.split('/')[-1], overwrite=True)
                 self.summary.append({"location": location, "size": backup_size, "timestamp": datetime.now(), "public_id": response['public_id']})
                 logger.info(f"Backed up '{location}' to Cloud. Original size: {original_size}. Backed-up size: {backup_size}.")
         except Exception as e:

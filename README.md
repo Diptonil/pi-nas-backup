@@ -31,6 +31,82 @@ Given the highly specific requirements of the project, here is how backups are i
 - The data is sent over to the Cloud.
 - The `summary.csv` is appended to. If anything is re-written, the new entry comes up now.
 
+The inverse operation is used for the unpacker (backup-retrieval) class.
+
+
+## Usage: To Back Up
+
+- Specify the locations for the files or folders to be backed up in `reports/locations.txt`. For example:
+
+```
+/home/user/Videos/Screencasts/hi.log
+/home/user/Videos/Screencasts/Screencast from 22-10-24 12:28:17 PM IST.webm
+/home/user/Videos/Screencasts/Screencast from 22-10-24 12:52:35 PM IST.webm
+/home/user/Videos/Screencasts
+
+```
+
+- To start the backup process:
+
+```sh
+# Without encryption
+python3 main.py
+
+# With encryption
+python3 main.py -e
+```
+
+- Validate the status using console logs or file logs stored in `logs/{date}.log`.
+- Check the `reports/summary.csv` file. That keeps a track of all backups made using this utility, providing a view of the current state of backups (the files, space used and the date they were last changed).
+
+
+## Usage: To Retrieve
+
+This retrieves the entire cloud backup, decrypts any file needing decryption. No exceptions.
+
+- To start retrieval:
+
+```sh
+python3 main.py -r
+```
+- Validate the status using console logs or file logs stored in `logs/{date}.log`.
+- The files get stored in `backups` directory.
+
+
+## Benchmarking
+
+The application was benchmarked on a system with the following following stats:
+
+```
+2025-05-16 13:39:59,982 | INFO | OS: Linux
+2025-05-16 13:39:59,983 | INFO | OS Version: #61~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue Apr 15 17:03:15 UTC 2
+2025-05-16 13:39:59,983 | INFO | Platform: Linux-6.8.0-59-generic-x86_64-with-glibc2.35
+2025-05-16 13:39:59,983 | INFO | Architcture: x86_64
+2025-05-16 13:39:59,983 | INFO | Processor: x86_64
+2025-05-16 13:39:59,984 | INFO | Total Memory (GB): 8.217972736
+2025-05-16 13:39:59,984 | INFO | Disk (GB): 298.650124288
+```
+
+The results for backup creation for one folder of 2 MB and 3 files of less than a few MBs:
+
+```
+2025-05-16 13:39:59,984 | INFO | Execution Time (minutes): 0.2712160031000773
+2025-05-16 13:39:59,984 | INFO | CPU (User) Time (minutes): 0.0405
+2025-05-16 13:39:59,985 | INFO | CPU (System) Time (minutes): 0.0018333333333333335
+2025-05-16 13:39:59,985 | INFO | Virtual Memory (MB): 73.76953125
+2025-05-16 13:39:59,985 | INFO | Resident Set Memory (MB): 43.85546875
+2025-05-16 13:39:59,985 | INFO | I/O Read (MB): 0.0
+2025-05-16 13:39:59,985 | INFO | I/O Write (MB): 7.2578125
+```
+
+The benchmarking scenario deals with way too small inputs and is far from ideal. Suprisingly, I didn't have much larger files on my local system to validate them. The point here is to state that a benchmarking utility is readily available, although the reports here are largely irrelevant given their far-from-usual inputs. To start benchmark:
+
+```sh
+python3 benchmark.py
+```
+
+The benchmark is run on whatever is present in `reports/locations.txt`.
+
 
 ## Future Modifications
 

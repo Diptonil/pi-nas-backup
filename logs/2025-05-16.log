@@ -1,0 +1,14 @@
+2025-05-16 13:39:59,987 | INFO | Initiating Bat Backup v1.0.0.
+2025-05-16 13:39:59,987 | INFO | Retrieval mode selected.
+2025-05-16 13:39:59,987 | INFO | Starting the 4-step process now.
+2025-05-16 13:39:59,990 | INFO | Downloading file from URL: http://res.cloudinary.com/dm11ycfz4/raw/upload/hi.log.gz.enc.
+2025-05-16 13:40:00,488 | INFO | Downloading file from URL: http://res.cloudinary.com/dm11ycfz4/raw/upload/Screencast%20from%2022-10-24%2012:28:17%20PM%20IST.webm.gz.enc.
+2025-05-16 13:40:02,035 | INFO | Downloading file from URL: http://res.cloudinary.com/dm11ycfz4/raw/upload/Screencast%20from%2022-10-24%2012:52:35%20PM%20IST.webm.gz.enc.
+2025-05-16 13:40:03,571 | INFO | Downloading file from URL: http://res.cloudinary.com/dm11ycfz4/raw/upload/Screencasts.tgz.enc.
+2025-05-16 13:40:05,707 | INFO | Step 1 (Download): Complete!
+2025-05-16 13:40:06,963 | INFO | Step 2 (Decryption): Complete!
+2025-05-16 13:40:06,964 | INFO | Unzipping file at hi.log.gz.
+2025-05-16 13:40:06,965 | INFO | Unzipping file at Screencast from 22-10-24 12:28:17 PM IST.webm.gz.
+2025-05-16 13:40:06,987 | INFO | Unzipping file at Screencast from 22-10-24 12:52:35 PM IST.webm.gz.
+2025-05-16 13:40:07,005 | INFO | Unzipping file at Screencasts.tgz.
+2025-05-16 13:40:07,068 | INFO | Step 3 (Decompression): Complete!

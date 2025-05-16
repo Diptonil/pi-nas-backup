@@ -1,21 +1,16 @@
 from abc import ABC, abstractmethod
-from base64 import urlsafe_b64encode
 import csv
 import sys
 import os
 import shutil
-import struct
 import tarfile
 import gzip
 
 import cloudinary
 import requests
-from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from cryptography.hazmat.backends import default_backend
 
-from utils.misc import logger, Credentials
+
+from utils.misc import logger, generate_key_from_password, Credentials
 
 
 SUMMARY_FILENAME = "reports/summary.csv"
@@ -34,25 +29,6 @@ class BackupRetriever(ABC):
     @abstractmethod
     def download(self) -> None:
         """Extraction logic that would vary based on the providers used."""
-
-    def derive_fernet(self, password: bytes, salt: bytes) -> Fernet:
-        kdf = PBKDF2HMAC(algorithm=hashes.SHA256(), length=32, salt=salt, iterations=390000, backend=default_backend())
-        key = urlsafe_b64encode(kdf.derive(password))
-        return Fernet(key)
-    
-    def decrypt_file(self, enc_path: str, password: bytes, out_path: str):
-        with open(enc_path, 'rb') as f:
-            salt = f.read(16)
-            fernet = self.derive_fernet(password, salt)
-            with open(out_path, 'wb') as out:
-                while True:
-                    len_bytes = f.read(4)
-                    if not len_bytes:
-                        break
-                    (token_len,) = struct.unpack('>I', len_bytes)
-                    token = f.read(token_len)
-                    pt = fernet.decrypt(token)
-                    out.write(pt)
         
     def decrypt(self) -> None:
         """Decrypts files that are encrypted. Also removes all .enc binaries."""
@@ -63,7 +39,14 @@ class BackupRetriever(ABC):
                     filename = 'backups/' + row['public_id']
                     if filename[-4:] != '.enc':
                         continue
-                    self.decrypt_file(filename, password, filename[:-4])
+                    with open(filename, 'rb') as file:
+                        content = file.read()
+                    salt = content[:16]
+                    encrypted = content[16:]
+                    fernet = generate_key_from_password(password, salt)
+                    decrypted_data = fernet.decrypt(encrypted)
+                    with open(filename[:-4], 'wb') as file:
+                        file.write(decrypted_data)
                     os.remove(filename)
         except Exception as e:
             print(f"Error processing: {e}")
@@ -76,9 +59,10 @@ class BackupRetriever(ABC):
         try:
             with open(SUMMARY_FILENAME, 'r', newline='', encoding='utf-8') as csvfile:
                 for row in csv.DictReader(csvfile):
-                    original_filename = 'backups/' + row['public_id']
+                    original_filename = 'backups/' + (row['public_id'][:-4] if row['public_id'][-4:] == ".enc" else row['public_id'])
                     folder = os.path.dirname(original_filename)
                     filename = os.path.basename(original_filename)
+                    logger.info(f"Unzipping file at {filename}.")
                     if filename.endswith('.tgz'):
                         with tarfile.open(original_filename, 'r:gz') as tar:
                             tar.extractall(path=folder)
@@ -100,6 +84,7 @@ class BackupRetriever(ABC):
         """To kick-off the entire process."""
         self.download()
         self.decrypt()
+        self.decompress()
 
 
 class CloudinaryBackupRetriever(BackupRetriever):
@@ -116,8 +101,10 @@ class CloudinaryBackupRetriever(BackupRetriever):
                 for row in csv.DictReader(csvfile):
                     filename = row['public_id']
                     url = cloudinary.utils.cloudinary_url(filename, resource_type = "raw")[0]
+                    logger.info(f"Downloading file from URL: {url}.")
                     with requests.get(url, stream=True) as r, open(f"backups/{filename}", 'wb') as f:
-                        shutil.copyfileobj(r.raw, f)
+                        for chunk in r.iter_content(chunk_size=8192): 
+                            f.write(chunk)
         except Exception as e:
             print(f"Error reading summary.csv: {e}")
             sys.exit()

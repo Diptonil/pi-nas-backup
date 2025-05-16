@@ -6,10 +6,11 @@ import platform
 import logging
 
 from utils.backup_generator import CloudinaryBackupGenerator
+from utils.backup_unpacker import CloudinaryBackupRetriever
 
 
 def get_logger(filename: str):
-    logger = logging.getLogger("Benchmarking")
+    logger = logging.getLogger(filename)
     logger.setLevel(logging.INFO)
     log_formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s')
     log_handler = logging.FileHandler(f'reports/{filename}')
@@ -19,9 +20,13 @@ def get_logger(filename: str):
     return logger
 
 
-def benchmark_code():
-    backup_generator = CloudinaryBackupGenerator(is_encrypted=True)
-    backup_generator.back_up()
+def benchmark_code(log_filename: str):
+    if log_filename == "backup-generation.log":
+        backup_generator = CloudinaryBackupGenerator(is_encrypted=True)
+        backup_generator.back_up()
+    else:
+        backup_retriever = CloudinaryBackupRetriever()
+        backup_retriever.retrieve()
 
 
 def log_resource_usage(log_filename: str):
@@ -29,21 +34,18 @@ def log_resource_usage(log_filename: str):
     process = psutil.Process(os.getpid())
     start_time = time.time()
     
-    # Snapshot before
     cpu_times_start = process.cpu_times()
     io_counters_start = process.io_counters()
     
-    # Run your main code here
-    benchmark_code()
+    benchmark_code(log_filename)
     
-    # Snapshot after
     end_time = time.time()
     cpu_times_end = process.cpu_times()
     mem_info_end = process.memory_info()
     io_counters_end = process.io_counters()
 
     logger.info("Benchmarking Bat Backup v1.0.0. The numbers below are approximate figures.")
-    logger.info("Backup mode selected.")
+    logger.info("Backup mode selected (with encryption)." if log_filename == "backup-generation.log" else "Retrieval mode selected.")
     logger.info(f"Date & Time: {datetime.now()}")
     logger.info("")
     logger.info(f"OS: {platform.system()}")
@@ -65,3 +67,4 @@ def log_resource_usage(log_filename: str):
 
 if __name__ == "__main__":
     log_resource_usage("backup-generation.log")
+    log_resource_usage("backup-unpacking.log")

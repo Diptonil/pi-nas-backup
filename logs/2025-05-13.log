@@ -1,0 +1,95 @@
+2025-05-13 10:32:03,729 | INFO | Initiating Bat Backup v1.0.0.
+2025-05-13 10:32:03,729 | INFO | Backup mode selected.
+2025-05-13 10:32:03,729 | INFO | Starting the 5-step process now.
+2025-05-13 10:32:04,998 | INFO | Step 1 (Compression): Complete!
+2025-05-13 10:32:04,998 | ERROR | Encryption failed on location: /home/bruce/Videos/Screencasts/hi.log.
+2025-05-13 10:32:05,002 | INFO | Step 4 (Archive Removal): Complete!
+2025-05-13 10:33:15,305 | INFO | Initiating Bat Backup v1.0.0.
+2025-05-13 10:33:15,306 | INFO | Backup mode selected.
+2025-05-13 10:33:15,306 | INFO | Starting the 5-step process now.
+2025-05-13 10:33:16,639 | INFO | Step 1 (Compression): Complete!
+2025-05-13 10:33:17,987 | INFO | Step 2 (Encryption): Complete!
+2025-05-13 10:33:21,031 | INFO | Backed up '/home/bruce/Videos/Screencasts/hi.log' to Cloud. Original size: 0. Backed-up size: 4.0K.
+2025-05-13 10:33:25,332 | INFO | Backed up '/home/bruce/Videos/Screencasts/Screencast from 22-10-24 12:28:17 PM IST.webm' to Cloud. Original size: 656K. Backed-up size: 812K.
+2025-05-13 10:33:27,893 | INFO | Backed up '/home/bruce/Videos/Screencasts/Screencast from 22-10-24 12:52:35 PM IST.webm' to Cloud. Original size: 484K. Backed-up size: 600K.
+2025-05-13 10:33:34,854 | INFO | Backed up '/home/bruce/Videos/Screencasts' to Cloud. Original size: 3.6M. Backed-up size: 4.2M.
+2025-05-13 10:33:34,855 | INFO | Step 3 (Backup): Complete!
+2025-05-13 10:33:34,860 | INFO | Step 4 (Archive Removal): Complete!
+2025-05-13 10:33:34,862 | INFO | Step 5 (Summary Generation): Complete!
+2025-05-13 10:33:34,862 | INFO | Backup successfully complete!
+2025-05-13 10:40:11,170 | INFO | Initiating Bat Backup v1.0.0.
+2025-05-13 10:40:11,171 | INFO | Retrieval mode selected.
+2025-05-13 10:40:11,171 | INFO | Starting the 4-step process now.
+2025-05-13 10:40:13,703 | INFO | Step 1 (Download): Complete!
+2025-05-13 10:41:34,362 | INFO | Initiating Bat Backup v1.0.0.
+2025-05-13 10:41:34,362 | INFO | Retrieval mode selected.
+2025-05-13 10:41:34,363 | INFO | Starting the 4-step process now.
+2025-05-13 10:41:34,618 | INFO | Step 1 (Download): Complete!
+2025-05-13 10:42:21,895 | INFO | Initiating Bat Backup v1.0.0.
+2025-05-13 10:42:21,895 | INFO | Retrieval mode selected.
+2025-05-13 10:42:21,896 | INFO | Starting the 4-step process now.
+2025-05-13 10:42:22,170 | INFO | Step 1 (Download): Complete!
+2025-05-13 10:42:38,227 | INFO | Initiating Bat Backup v1.0.0.
+2025-05-13 10:42:38,227 | INFO | Retrieval mode selected.
+2025-05-13 10:42:38,227 | INFO | Starting the 4-step process now.
+2025-05-13 10:42:38,474 | INFO | Step 1 (Download): Complete!
+2025-05-13 10:43:05,735 | INFO | Initiating Bat Backup v1.0.0.
+2025-05-13 10:43:05,736 | INFO | Retrieval mode selected.
+2025-05-13 10:43:05,736 | INFO | Starting the 4-step process now.
+2025-05-13 10:43:05,981 | INFO | Step 1 (Download): Complete!
+2025-05-13 11:03:51,443 | INFO | Initiating Bat Backup v1.0.0.
+2025-05-13 11:03:51,443 | INFO | Backup mode selected.
+2025-05-13 11:03:51,443 | INFO | Starting the 4-step process now.
+2025-05-13 11:03:52,546 | INFO | Step 1 (Compression): Complete!
+2025-05-13 11:03:54,329 | INFO | Backed up '/home/bruce/Videos/Screencasts/hi.log' to Cloud. Original size: 0. Backed-up size: 4.0K.
+2025-05-13 11:03:58,184 | INFO | Backed up '/home/bruce/Videos/Screencasts/Screencast from 22-10-24 12:28:17 PM IST.webm' to Cloud. Original size: 656K. Backed-up size: 608K.
+2025-05-13 11:04:00,575 | INFO | Backed up '/home/bruce/Videos/Screencasts/Screencast from 22-10-24 12:52:35 PM IST.webm' to Cloud. Original size: 484K. Backed-up size: 452K.
+2025-05-13 11:04:06,105 | INFO | Backed up '/home/bruce/Videos/Screencasts' to Cloud. Original size: 3.6M. Backed-up size: 3.2M.
+2025-05-13 11:04:06,105 | INFO | Step 2 (Backup): Complete!
+2025-05-13 11:04:06,109 | INFO | Step 3 (Archive Removal): Complete!
+2025-05-13 11:04:06,111 | INFO | Step 4 (Summary Generation): Complete!
+2025-05-13 11:04:06,111 | INFO | Backup successfully complete!
+2025-05-13 11:05:12,240 | INFO | Initiating Bat Backup v1.0.0.
+2025-05-13 11:05:12,240 | INFO | Retrieval mode selected.
+2025-05-13 11:05:12,240 | INFO | Starting the 4-step process now.
+2025-05-13 11:05:12,462 | INFO | Step 1 (Download): Complete!
+2025-05-13 11:06:33,648 | INFO | Initiating Bat Backup v1.0.0.
+2025-05-13 11:06:33,649 | INFO | Retrieval mode selected.
+2025-05-13 11:06:33,649 | INFO | Starting the 4-step process now.
+2025-05-13 11:06:33,871 | INFO | Step 1 (Download): Complete!
+2025-05-13 11:07:50,690 | INFO | Initiating Bat Backup v1.0.0.
+2025-05-13 11:07:50,690 | INFO | Retrieval mode selected.
+2025-05-13 11:07:50,691 | INFO | Starting the 4-step process now.
+2025-05-13 11:07:50,940 | INFO | Step 1 (Download): Complete!
+2025-05-13 11:49:21,215 | INFO | Initiating Bat Backup v1.0.0.
+2025-05-13 11:49:21,215 | INFO | Retrieval mode selected.
+2025-05-13 11:49:21,215 | INFO | Starting the 4-step process now.
+2025-05-13 11:49:21,745 | INFO | Step 1 (Download): Complete!
+2025-05-13 11:50:51,560 | INFO | Initiating Bat Backup v1.0.0.
+2025-05-13 11:50:51,561 | INFO | Backup mode selected.
+2025-05-13 11:50:51,561 | INFO | Starting the 4-step process now.
+2025-05-13 11:50:52,638 | INFO | Step 1 (Compression): Complete!
+2025-05-13 11:50:54,463 | INFO | Backed up '/home/bruce/Videos/Screencasts/hi.log' to Cloud. Original size: 0. Backed-up size: 4.0K.
+2025-05-13 11:50:58,568 | INFO | Backed up '/home/bruce/Videos/Screencasts/Screencast from 22-10-24 12:28:17 PM IST.webm' to Cloud. Original size: 656K. Backed-up size: 608K.
+2025-05-13 11:51:00,991 | INFO | Backed up '/home/bruce/Videos/Screencasts/Screencast from 22-10-24 12:52:35 PM IST.webm' to Cloud. Original size: 484K. Backed-up size: 452K.
+2025-05-13 11:51:06,543 | INFO | Backed up '/home/bruce/Videos/Screencasts' to Cloud. Original size: 3.6M. Backed-up size: 3.2M.
+2025-05-13 11:51:06,543 | INFO | Step 2 (Backup): Complete!
+2025-05-13 11:51:06,547 | INFO | Step 3 (Archive Removal): Complete!
+2025-05-13 11:51:06,549 | INFO | Step 4 (Summary Generation): Complete!
+2025-05-13 11:51:06,549 | INFO | Backup successfully complete!
+2025-05-13 11:51:59,892 | INFO | Initiating Bat Backup v1.0.0.
+2025-05-13 11:51:59,893 | INFO | Backup mode selected.
+2025-05-13 11:51:59,893 | INFO | Starting the 4-step process now.
+2025-05-13 11:52:01,127 | INFO | Step 1 (Compression): Complete!
+2025-05-13 11:52:02,868 | INFO | Backed up '/home/bruce/Videos/Screencasts/hi.log' to Cloud. Original size: 0. Backed-up size: 4.0K.
+2025-05-13 11:52:06,623 | INFO | Backed up '/home/bruce/Videos/Screencasts/Screencast from 22-10-24 12:28:17 PM IST.webm' to Cloud. Original size: 656K. Backed-up size: 608K.
+2025-05-13 11:52:09,114 | INFO | Backed up '/home/bruce/Videos/Screencasts/Screencast from 22-10-24 12:52:35 PM IST.webm' to Cloud. Original size: 484K. Backed-up size: 452K.
+2025-05-13 11:52:14,848 | INFO | Backed up '/home/bruce/Videos/Screencasts' to Cloud. Original size: 3.6M. Backed-up size: 3.2M.
+2025-05-13 11:52:14,848 | INFO | Step 2 (Backup): Complete!
+2025-05-13 11:52:14,852 | INFO | Step 3 (Archive Removal): Complete!
+2025-05-13 11:52:14,854 | INFO | Step 4 (Summary Generation): Complete!
+2025-05-13 11:52:14,854 | INFO | Backup successfully complete!
+2025-05-13 11:52:40,233 | INFO | Initiating Bat Backup v1.0.0.
+2025-05-13 11:52:40,234 | INFO | Retrieval mode selected.
+2025-05-13 11:52:40,234 | INFO | Starting the 4-step process now.
+2025-05-13 11:52:40,474 | INFO | Step 1 (Download): Complete!

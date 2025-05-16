@@ -9,7 +9,6 @@ import gzip
 import cloudinary
 import requests
 
-
 from utils.misc import logger, generate_key_from_password, Credentials
 
 
@@ -24,7 +23,7 @@ class BackupRetriever(ABC):
         self.credentials = Credentials()
         logger.info("Initiating Bat Backup v1.0.0.")
         logger.info("Retrieval mode selected.")
-        logger.info("Starting the 4-step process now.")
+        logger.info("Starting the 3-step process now.")
 
     @abstractmethod
     def download(self) -> None:
@@ -76,9 +75,6 @@ class BackupRetriever(ABC):
             sys.exit()
         logger.info("Step 3 (Decompression): Complete!")
         print("Step 3 (Decompression): Complete!")
-
-    def cleanup(self) -> None:
-        """Delete the unextracted and unencrypted files."""
 
     def retrieve(self) -> None:
         """To kick-off the entire process."""

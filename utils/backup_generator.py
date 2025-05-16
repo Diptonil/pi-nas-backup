@@ -7,14 +7,9 @@ import gzip
 import shutil
 import sys
 import tarfile
-import struct
 
 import cloudinary
 import cloudinary.uploader
-from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from cryptography.hazmat.backends import default_backend
 
 from utils.misc import get_size_gb, logger, generate_key_from_password, Credentials
 

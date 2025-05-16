@@ -34,6 +34,22 @@ Given the highly specific requirements of the project, here is how backups are i
 The inverse operation is used for the unpacker (backup-retrieval) class.
 
 
+## Environment Secrets
+
+The program is designed to read from a `.env` file. The file should have these parameters to work:
+
+```
+CLOUD_NAME=
+API_KEY=
+API_SECRET=
+PASSWORD=
+```
+
+- The first three variables are specific to Cloudinary.
+- The `PASSWORD` is basically the key used to encrypt and decrypt data.
+- A demo file `.env.demo` is available in this repository for reference.
+
+
 ## Usage: To Back Up
 
 - Specify the locations for the files or folders to be backed up in `reports/locations.txt`. For example:
